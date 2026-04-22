@@ -1,35 +1,33 @@
 # qmVP
 
-Quantative Market Vector Pulls (`qmVP`) is a lightweight machine-learning pipeline that scrapes HTML from market-related pages and converts textual signals into decision-grade `buy` / `sell` / `hold` vectors for retail investor workflows.
+Quantative Market Vector Pulls (`qmVP`) is a machine-learning market signal engine that ingests live X sentiment, Reddit sentiment, and market quote status, then outputs decision-grade `buy` / `sell` / `hold` vectors.
 
-## What It Does
+## Live Features
 
-- Scrapes raw HTML from a target webpage
-- Converts HTML to normalized text
-- Extracts market-oriented feature signals (bullish/bearish pressure, macro risk, catalyst density, volatility)
-- Scores the feature vector through a multiclass linear model
-- Returns:
-  - `decision.label` (`buy`, `sell`, `hold`)
+- Auto-scrapes live sentiment from X (API when `X_BEARER_TOKEN` is set, scrape fallback otherwise)
+- Auto-scrapes live Reddit `hot` posts from your selected subreddit
+- Pulls live market quote snapshots (SPY/QQQ/DIA/IWM/VIX by default)
+- Merges all feeds into a feature vector and returns:
+  - decision label (`buy` / `sell` / `hold`)
   - probability distribution
   - full feature vector
   - top contributing features
-- Supports lightweight online training updates via supervised feedback
+  - feed health by source (status, latency, item count)
+- Auto-refresh intervals in the UI: `1s`, `10s`, `1m`, `5m`, `10m`, `1h`
 
 ## Quickstart
 
 ```bash
 npm run build
-npm run start
+npm start
 ```
 
-Then open:
-
-- [http://localhost:4309](http://localhost:4309)
+Open [http://localhost:4309](http://localhost:4309).
 
 ## Scripts
 
 - `npm run build` -> builds distributable files into `dist/`
-- `npm run start` -> runs the built app (`dist/server.js`)
+- `npm start` -> runs the built app (`dist/server.js`)
 - `npm run dev` -> runs from source (`src/server.js`)
 
 ## API
@@ -40,13 +38,35 @@ Then open:
 GET /api/health
 ```
 
-### Pull Market Vector
+### Pull Single URL (legacy)
 
 ```http
 GET /api/pull?url=https://example.com/market-news
 ```
 
-### Train Model From Label
+### Pull Live Market Vector (X + Reddit + Market)
+
+```http
+POST /api/pull/live
+Content-Type: application/json
+
+{
+  "query": "(stocks OR market OR earnings OR fed OR inflation) lang:en",
+  "subreddit": "stocks",
+  "symbols": ["SPY", "QQQ", "DIA", "IWM", "^VIX"],
+  "xLimit": 8,
+  "redditLimit": 8,
+  "timeoutMs": 12000
+}
+```
+
+Alias endpoint also supported:
+
+```http
+GET /api/live-pull
+```
+
+### Train Model From Label (legacy URL mode)
 
 ```http
 POST /api/train
@@ -64,17 +84,12 @@ Content-Type: application/json
 GET /api/model
 ```
 
-## Terminal UI
+## Environment
 
-The UI is intentionally terminal-like and code-first:
-
-- command prompt style pull/train controls
-- vector matrix and top feature contribution panes
-- runtime log stream with timestamped events
-- CRT-inspired visual treatment
+- `PORT` (optional): defaults to `4309`
+- `X_BEARER_TOKEN` (optional): enables direct X API pulls before fallback scraping
 
 ## Notes
 
-- Only `http` and `https` targets are accepted.
-- The baseline model is heuristic-initialized and improves with incremental labels through `/api/train`.
-- This project is informational software and not financial advice.
+- This system is informational software and not financial advice.
+- If X API credentials are not configured, qmVP automatically attempts scrape fallback mode.

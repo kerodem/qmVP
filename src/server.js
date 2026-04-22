@@ -62,6 +62,25 @@ function sendJson(response, statusCode, payload) {
   response.end(JSON.stringify(payload, null, 2));
 }
 
+function parseLivePullConfigFromQuery(url) {
+  const symbolsRaw = url.searchParams.get('symbols');
+  const symbols = symbolsRaw
+    ? symbolsRaw
+        .split(',')
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+    : undefined;
+
+  return {
+    query: url.searchParams.get('query') || undefined,
+    subreddit: url.searchParams.get('subreddit') || undefined,
+    symbols,
+    xLimit: url.searchParams.get('xLimit') || undefined,
+    redditLimit: url.searchParams.get('redditLimit') || undefined,
+    timeoutMs: url.searchParams.get('timeoutMs') || undefined
+  };
+}
+
 async function serveStatic(requestPath, response) {
   const publicDir = await resolvePublicDir();
   const normalizedPath = requestPath === '/' ? '/index.html' : requestPath;
@@ -117,6 +136,23 @@ async function handleApi(request, response, url) {
 
     try {
       const result = await engine.pull(targetUrl);
+      sendJson(response, 200, result);
+    } catch (error) {
+      sendJson(response, 422, { error: error.message });
+    }
+    return;
+  }
+
+  if (
+    (request.method === 'GET' || request.method === 'POST')
+    && (url.pathname === '/api/pull/live' || url.pathname === '/api/live-pull')
+  ) {
+    try {
+      const payload = request.method === 'POST'
+        ? await readJsonBody(request)
+        : parseLivePullConfigFromQuery(url);
+
+      const result = await engine.pullLive(payload);
       sendJson(response, 200, result);
     } catch (error) {
       sendJson(response, 422, { error: error.message });

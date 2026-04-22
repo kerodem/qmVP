@@ -2,12 +2,14 @@ export const TERM_GROUPS = {
   bullish: [
     'breakout', 'beat', 'beats', 'growth', 'upside', 'outperform', 'bullish', 'rally',
     'expansion', 'surge', 'acceleration', 'upgrade', 'strong', 'record', 'momentum',
-    'resilient', 'profitability', 'tailwind', 'innovation', 'rebound', 'accumulate', 'buy'
+    'resilient', 'profitability', 'tailwind', 'innovation', 'rebound', 'accumulate', 'buy',
+    'advancer', 'risk-on', 'green'
   ],
   bearish: [
     'downgrade', 'miss', 'missed', 'decline', 'drawdown', 'bearish', 'selloff', 'contraction',
     'guidance-cut', 'warning', 'weak', 'headwind', 'default', 'debt', 'overvalued',
-    'lawsuit', 'fraud', 'recession', 'slowdown', 'loss', 'panic', 'sell'
+    'lawsuit', 'fraud', 'recession', 'slowdown', 'loss', 'panic', 'sell',
+    'risk-off', 'red', 'drawdown'
   ],
   uncertainty: [
     'uncertain', 'volatile', 'risk', 'speculative', 'unpredictable', 'possible', 'may',
@@ -19,14 +21,15 @@ export const TERM_GROUPS = {
   ],
   macroRisk: [
     'inflation', 'rates', 'fed', 'yield', 'tariff', 'policy', 'geopolitical', 'sanction',
-    'currency', 'liquidity', 'credit', 'default-risk', 'employment', 'gdp'
+    'currency', 'liquidity', 'credit', 'default-risk', 'employment', 'gdp', 'vix', 'volatility-index'
   ],
   catalyst: [
     'earnings', 'guidance', 'launch', 'partnership', 'approval', 'acquisition', 'buyback',
     'dividend', 'roadmap', 'contract', 'renewal', 'merger', 'spin-off'
   ],
   crowding: [
-    'hype', 'meme', 'viral', 'retail', 'fomo', 'short-squeeze', 'crowded', 'consensus'
+    'hype', 'meme', 'viral', 'retail', 'fomo', 'short-squeeze', 'crowded', 'consensus',
+    'reddit', 'x', 'tweet', 'thread', 'upvote', 'comments'
   ]
 };
 

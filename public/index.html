@@ -3,65 +3,189 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>qmVP Terminal</title>
+    <title>qmVP | Live Market Vectors</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="crt-overlay"></div>
-    <main class="terminal-shell">
-      <header class="terminal-header reveal">
-        <div class="title-block">
-          <p class="label">Quantative Market Vector Pulls</p>
-          <h1>qmVP://terminal</h1>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-scan" aria-hidden="true"></div>
+
+    <main class="hud">
+      <header class="panel topbar">
+        <div class="top-left">
+          <p class="eyebrow">Quantative Market Vector Pulls</p>
+          <h1>qmVP // LIVE VECTOR DECK</h1>
+          <div class="tag-row">
+            <span class="tag">X</span>
+            <span class="tag">REDDIT</span>
+            <span class="tag">LIVE MARKET</span>
+            <span class="tag">AUTO REFRESH</span>
+          </div>
         </div>
-        <div class="status-badges">
-          <span class="badge">mode: retail-vector</span>
-          <span class="badge">api: /api/pull</span>
+
+        <div class="top-center">
+          <p id="clock-time" class="clock-time">--:--:--</p>
+          <p id="clock-date" class="clock-date">----</p>
+        </div>
+
+        <div class="top-right">
+          <span id="auto-state" class="pill off">AUTO OFF</span>
+          <span id="last-run-pill" class="pill">LAST: --</span>
+          <span id="next-run-pill" class="pill">NEXT: --</span>
         </div>
       </header>
 
-      <section class="panel command-panel reveal delay-1">
-        <form id="pull-form" autocomplete="off">
-          <label for="url-input">$ pull --url</label>
-          <div class="command-row">
-            <input id="url-input" name="url" type="url" placeholder="https://news.example.com/market-brief" required />
-            <button type="submit">execute</button>
-          </div>
-        </form>
-        <div class="train-row">
-          <label for="train-label">$ train --label</label>
-          <select id="train-label" name="train-label">
-            <option value="buy">buy</option>
-            <option value="sell">sell</option>
-            <option value="hold">hold</option>
-          </select>
-          <button id="train-button" type="button">fit</button>
-        </div>
+      <section class="workspace">
+        <aside class="panel rail left-rail">
+          <h2>INGEST CONTROL</h2>
+          <form id="control-form" class="control-form" autocomplete="off">
+            <label for="query-input">X Query</label>
+            <input id="query-input" name="query" type="text" value="(stocks OR market OR earnings OR fed OR inflation) lang:en" />
+
+            <label for="subreddit-input">Reddit Subreddit</label>
+            <input id="subreddit-input" name="subreddit" type="text" value="stocks" />
+
+            <label for="symbols-input">Market Symbols (comma separated)</label>
+            <input id="symbols-input" name="symbols" type="text" value="SPY,QQQ,DIA,IWM,^VIX" />
+
+            <label for="interval-select">Auto Refresh Interval</label>
+            <select id="interval-select" name="interval">
+              <option value="1000">1s</option>
+              <option value="10000" selected>10s</option>
+              <option value="60000">1m</option>
+              <option value="300000">5m</option>
+              <option value="600000">10m</option>
+              <option value="3600000">1h</option>
+            </select>
+
+            <div class="button-row">
+              <button id="pull-now-btn" type="submit">PULL NOW</button>
+              <button id="auto-toggle-btn" type="button">START AUTO</button>
+            </div>
+          </form>
+
+          <section class="module">
+            <h3>FEED HEALTH</h3>
+            <ul id="feed-status-list" class="status-list">
+              <li><span>X</span><strong>pending</strong></li>
+              <li><span>Reddit</span><strong>pending</strong></li>
+              <li><span>Market</span><strong>pending</strong></li>
+            </ul>
+          </section>
+
+          <section class="module">
+            <h3>MARKET REGIME</h3>
+            <p id="regime-pill" class="regime neutral">UNKNOWN</p>
+            <div class="mini-grid">
+              <div>
+                <span>ADV</span>
+                <strong id="advancers-val">--</strong>
+              </div>
+              <div>
+                <span>DEC</span>
+                <strong id="decliners-val">--</strong>
+              </div>
+              <div>
+                <span>BREADTH</span>
+                <strong id="breadth-val">--</strong>
+              </div>
+              <div>
+                <span>VIX</span>
+                <strong id="vix-val">--</strong>
+              </div>
+            </div>
+          </section>
+        </aside>
+
+        <section class="center-stack">
+          <article class="panel terminal-panel">
+            <div class="panel-head">
+              <p class="panel-title">RUNTIME STREAM</p>
+              <span class="panel-sub">/api/pull/live</span>
+            </div>
+            <pre id="log-block" class="terminal-log"></pre>
+          </article>
+
+          <article class="panel decision-panel">
+            <div class="panel-head">
+              <p class="panel-title">DECISION VECTOR</p>
+              <span id="decision-confidence" class="panel-sub">confidence --</span>
+            </div>
+
+            <div class="decision-grid">
+              <div class="decision-card">
+                <p>BUY</p>
+                <strong id="buy-prob">--</strong>
+              </div>
+              <div class="decision-card">
+                <p>SELL</p>
+                <strong id="sell-prob">--</strong>
+              </div>
+              <div class="decision-card">
+                <p>HOLD</p>
+                <strong id="hold-prob">--</strong>
+              </div>
+            </div>
+
+            <div id="decision-callout" class="decision-callout">Awaiting live pull...</div>
+          </article>
+
+          <article class="panel details-panel">
+            <div class="details-column">
+              <div class="panel-head">
+                <p class="panel-title">VECTOR.MATRIX</p>
+              </div>
+              <pre id="vector-block" class="json-block">{}</pre>
+            </div>
+            <div class="details-column">
+              <div class="panel-head">
+                <p class="panel-title">TOP.CONTRIBUTORS</p>
+              </div>
+              <pre id="explanation-block" class="json-block">[]</pre>
+            </div>
+          </article>
+        </section>
+
+        <aside class="panel rail right-rail">
+          <h2>NETWORK + MARKET TAPE</h2>
+
+          <section class="module">
+            <h3>TICKER FEED</h3>
+            <ul id="ticker-list" class="ticker-list"></ul>
+          </section>
+
+          <section class="module">
+            <h3>CONFIDENCE TRAIL</h3>
+            <canvas id="confidence-canvas" width="280" height="120"></canvas>
+          </section>
+
+          <section class="module">
+            <h3>X SNIPPETS</h3>
+            <ul id="x-snippet-list" class="snippet-list"></ul>
+          </section>
+
+          <section class="module">
+            <h3>REDDIT SNIPPETS</h3>
+            <ul id="reddit-snippet-list" class="snippet-list"></ul>
+          </section>
+        </aside>
       </section>
 
-      <section class="grid reveal delay-2">
-        <article class="panel decision-panel">
-          <p class="panel-label">decision.signal</p>
-          <div id="decision-block" class="decision-block">awaiting pull...</div>
-        </article>
-
-        <article class="panel vectors-panel">
-          <p class="panel-label">vector.matrix</p>
-          <pre id="vector-block" class="code-block">{}
-</pre>
-        </article>
-
-        <article class="panel explanation-panel">
-          <p class="panel-label">top.contributors</p>
-          <pre id="explanation-block" class="code-block">[]
-</pre>
-        </article>
-
-        <article class="panel log-panel">
-          <p class="panel-label">runtime.log</p>
-          <pre id="log-block" class="log-block"></pre>
-        </article>
-      </section>
+      <footer class="panel keydeck" aria-hidden="true">
+        <span>ESC</span>
+        <span>TAB</span>
+        <span>CTRL</span>
+        <span>SHIFT</span>
+        <span>ALT</span>
+        <span>ENTER</span>
+        <span>BACK</span>
+      </footer>
     </main>
 
     <script type="module" src="/app.js"></script>
