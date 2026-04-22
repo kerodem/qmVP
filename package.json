@@ -1,0 +1,23 @@
+{
+  "name": "qmvp",
+  "version": "0.1.0",
+  "description": "Quantative Market Vector Pulls: HTML market scraping and decision-grade buy/sell vectors.",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "node dist/server.js",
+    "dev": "node src/server.js"
+  },
+  "keywords": [
+    "market",
+    "vector",
+    "trading",
+    "ml",
+    "scraping"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

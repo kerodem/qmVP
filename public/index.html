@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>qmVP Terminal</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="crt-overlay"></div>
+    <main class="terminal-shell">
+      <header class="terminal-header reveal">
+        <div class="title-block">
+          <p class="label">Quantative Market Vector Pulls</p>
+          <h1>qmVP://terminal</h1>
+        </div>
+        <div class="status-badges">
+          <span class="badge">mode: retail-vector</span>
+          <span class="badge">api: /api/pull</span>
+        </div>
+      </header>
+
+      <section class="panel command-panel reveal delay-1">
+        <form id="pull-form" autocomplete="off">
+          <label for="url-input">$ pull --url</label>
+          <div class="command-row">
+            <input id="url-input" name="url" type="url" placeholder="https://news.example.com/market-brief" required />
+            <button type="submit">execute</button>
+          </div>
+        </form>
+        <div class="train-row">
+          <label for="train-label">$ train --label</label>
+          <select id="train-label" name="train-label">
+            <option value="buy">buy</option>
+            <option value="sell">sell</option>
+            <option value="hold">hold</option>
+          </select>
+          <button id="train-button" type="button">fit</button>
+        </div>
+      </section>
+
+      <section class="grid reveal delay-2">
+        <article class="panel decision-panel">
+          <p class="panel-label">decision.signal</p>
+          <div id="decision-block" class="decision-block">awaiting pull...</div>
+        </article>
+
+        <article class="panel vectors-panel">
+          <p class="panel-label">vector.matrix</p>
+          <pre id="vector-block" class="code-block">{}
+</pre>
+        </article>
+
+        <article class="panel explanation-panel">
+          <p class="panel-label">top.contributors</p>
+          <pre id="explanation-block" class="code-block">[]
+</pre>
+        </article>
+
+        <article class="panel log-panel">
+          <p class="panel-label">runtime.log</p>
+          <pre id="log-block" class="log-block"></pre>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
