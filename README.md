@@ -4,6 +4,9 @@ Quantative Market Vector Pulls (`qmVP`) is a machine-learning market signal engi
 
 ## Live Features
 
+<img width="1507" height="855" alt="image" src="https://github.com/user-attachments/assets/31c1b8ca-1f5d-4fcd-ac5d-4aeb6c147f70" />
+
+
 - Auto-scrapes live sentiment from X (API when `X_BEARER_TOKEN` is set, scrape fallback otherwise)
 - Auto-scrapes live Reddit `hot` posts from your selected subreddit
 - Pulls live market quote snapshots (SPY/QQQ/DIA/IWM/VIX by default)
