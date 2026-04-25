@@ -1,6 +1,6 @@
 # qmVP
 
-Quantative Market Vector Pulls (`qmVP`) is a machine-learning market signal engine that ingests live X sentiment, Reddit sentiment, and market quote status, then outputs decision-grade `buy` / `sell` / `hold` vectors.
+Quantative market Vector Pulls (`qmVP`) is a machine-learning market signal engine that ingests live X sentiment, Reddit sentiment, and market quote status, then outputs decision-grade `buy` / `sell` / `hold` vectors.
 
 ## Live Features
 
